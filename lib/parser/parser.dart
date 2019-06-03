@@ -2,7 +2,6 @@ import '../scanner/scanner.dart';
 import '../ast/ast.dart';
 import 'state.dart';
 import '../errors/errors.dart';
-import 'package:source_span/source_span.dart';
 import 'package:cgrep/utils/string_unescape.dart';
 
 part 'condition.dart';

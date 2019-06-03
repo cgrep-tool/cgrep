@@ -198,8 +198,49 @@ dynamic _evalBiExpression(
     }
   }
 
-  // TODO DateTime
-  // TODO Duration
+  if(left is DateTime && right is DateTime) {
+    switch (expression.op.token) {
+      case TokenType.minus:
+        return left.difference(right);
+      case TokenType.equal:
+        return left == right;
+      case TokenType.notEqual:
+        return left != right;
+      case TokenType.lessThan:
+        return left.compareTo(right) < 0;
+      case TokenType.greaterThan:
+        return left.compareTo(right) > 0;
+      case TokenType.greaterThanOrEqualTo:
+        return left.compareTo(right) >= 0;
+      case TokenType.lessThanOrEqualTo:
+        return left.compareTo(right) <= 0;
+      default:
+        throw SyntaxError(expression.op.span, "Invalid operator");
+    }
+  }
+
+  if(left is Duration && right is Duration) {
+    switch (expression.op.token) {
+      case TokenType.plus:
+        return left + right;
+      case TokenType.minus:
+        return left - right;
+      case TokenType.equal:
+        return left == right;
+      case TokenType.notEqual:
+        return left != right;
+      case TokenType.lessThan:
+        return left < right;
+      case TokenType.greaterThan:
+        return left > right;
+      case TokenType.greaterThanOrEqualTo:
+        return left >= right;
+      case TokenType.lessThanOrEqualTo:
+        return left <= right;
+      default:
+        throw SyntaxError(expression.op.span, "Invalid operator");
+    }
+  }
 
   if (left.runtimeType == right.runtimeType) {
     switch (expression.op.token) {
