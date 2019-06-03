@@ -3,6 +3,7 @@ import '../ast/ast.dart';
 import 'state.dart';
 import '../errors/errors.dart';
 import 'package:source_span/source_span.dart';
+import 'package:cgrep/utils/string_unescape.dart';
 
 part 'condition.dart';
 
@@ -56,11 +57,15 @@ class ValueParser {
       state.consume();
       return DoubleValue(value.span, double.parse(value.text));
     }
+    if (value.type == TokenType.rawString) {
+      state.consume();
+      return StringValue(
+          value.span, value.text.substring(2, value.text.length - 1));
+    }
     if (value.type == TokenType.string) {
       state.consume();
-      // TODO support multiple string literals
       return StringValue(
-          value.span, value.text.substring(1, value.text.length - 1));
+          value.span, unescape(value.text.substring(1, value.text.length - 1)));
     }
     if (value.type == TokenType.true_) {
       state.consume();

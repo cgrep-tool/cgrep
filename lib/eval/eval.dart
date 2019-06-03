@@ -115,6 +115,8 @@ dynamic _evalBiExpression(
     switch (expression.op.token) {
       case TokenType.plus:
         return left + right;
+      case TokenType.tilde:
+        return RegExp(right).hasMatch(left);
       case TokenType.equal:
         return left == right;
       case TokenType.notEqual:

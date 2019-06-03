@@ -7,7 +7,7 @@ const opPrecedence = <TokenType, int>{
   TokenType.greaterThan: 60,
   TokenType.equal: 70,
   TokenType.notEqual: 70,
-  TokenType.like: 70,
+  TokenType.tilde: 70,
   TokenType.logicalAnd: 100,
   TokenType.logicalOr: 100,
 };

@@ -42,7 +42,6 @@ enum TokenType {
   greaterThan,
   lessThanOrEqualTo,
   greaterThanOrEqualTo,
-  like,
 
   logicalAnd,
   logicalOr,
@@ -57,6 +56,7 @@ enum TokenType {
   // TODO binaryInteger,
   double,
   string,
+  rawString,
   column,
   date,
 }
@@ -88,7 +88,6 @@ final normalPatterns = <Pattern, TokenType>{
   '>': TokenType.greaterThan,
   '<=': TokenType.lessThanOrEqualTo,
   '>=': TokenType.greaterThanOrEqualTo,
-  '~': TokenType.like,
 
   '&&': TokenType.logicalAnd,
   '||': TokenType.logicalOr,
@@ -110,12 +109,20 @@ final normalPatterns = <Pattern, TokenType>{
   RegExp(r"@'[0-9a-zA-Z\-\+: ]*'"): TokenType.date,
   singleQuotedString: TokenType.string,
   doubleQuotedString: TokenType.string,
+  rawSingleQuotedString: TokenType.rawString,
+  rawDoubleQuotedString: TokenType.rawString,
   // TODO RegExp(r'[A-Za-z_][A-Za-z0-9_]*'): TokenType.identifier,
   RegExp(r'\$[0-9]+'): TokenType.column,
 };
 
-final RegExp doubleQuotedString = new RegExp(
+final RegExp rawDoubleQuotedString = RegExp(
+    r'r"((\\(["\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^"\\]))*"');
+
+final RegExp rawSingleQuotedString = RegExp(
+    r"r'((\\(['\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^'\\]))*'");
+
+final RegExp doubleQuotedString = RegExp(
     r'"((\\(["\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^"\\]))*"');
 
-final RegExp singleQuotedString = new RegExp(
+final RegExp singleQuotedString = RegExp(
     r"'((\\(['\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^'\\]))*'");
