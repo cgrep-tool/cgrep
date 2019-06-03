@@ -24,6 +24,18 @@ enum TokenType {
   leftBracket,
   rightBracket,
 
+  plus,
+  minus,
+  asterisk,
+  backwardSlash,
+  percentage,
+  and,
+  or,
+  tilde,
+  caret,
+
+  cast,
+
   equal,
   notEqual,
   lessThan,
@@ -34,9 +46,10 @@ enum TokenType {
 
   logicalAnd,
   logicalOr,
-  not,
+  logicalNot,
 
   // Data
+  type,
   false_,
   true_,
   integer,
@@ -55,6 +68,19 @@ final normalPatterns = <Pattern, TokenType>{
   '(': TokenType.leftBracket,
   ')': TokenType.rightBracket,
 
+  '+': TokenType.equal,
+  '-': TokenType.notEqual,
+  '*': TokenType.notEqual,
+  '/': TokenType.lessThan,
+  '%': TokenType.percentage,
+
+  '&': TokenType.and,
+  '|': TokenType.or,
+  '^': TokenType.caret,
+  '~': TokenType.tilde,
+
+  '::': TokenType.cast,
+
   '=': TokenType.equal,
   '!=': TokenType.notEqual,
   '<>': TokenType.notEqual,
@@ -62,11 +88,11 @@ final normalPatterns = <Pattern, TokenType>{
   '>': TokenType.greaterThan,
   '<=': TokenType.lessThanOrEqualTo,
   '>=': TokenType.greaterThanOrEqualTo,
-  '%%': TokenType.like,
+  '~': TokenType.like,
 
   '&&': TokenType.logicalAnd,
   '||': TokenType.logicalOr,
-  '!': TokenType.not,
+  '!': TokenType.tilde,
 
   'false': TokenType.false_,
   'true': TokenType.true_,
@@ -76,6 +102,7 @@ final normalPatterns = <Pattern, TokenType>{
   'yes': TokenType.true_,
   'n': TokenType.false_,
   'y': TokenType.true_,
+  RegExp(r"@[A-Z][0-9a-zA-Z_]*"): TokenType.type,
   RegExp(r'[0-9]+([_0-9]*[0-9])*'): TokenType.integer,
   // TODO RegExp(r'0x([A-Fa-f0-9]+)'): TokenType.hexInteger,
   // TODO RegExp(r'0b([01]+)'): TokenType.binaryInteger,

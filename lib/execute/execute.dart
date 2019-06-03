@@ -8,23 +8,17 @@ Value _compileExpr(String cond) {
   return parse(tokens);
 }
 
-Evaluator compileConds(String cond, List<String> ifs) {
-
-}
-
 class Evaluator {
-  final List<Value> ifs;
+  final Value condition;
 
-  Evaluator(this.ifs);
+  Evaluator(this.condition);
 
-   factory Evaluator.compile(List<String> ifs) {
-     final ifsParsed = ifs.map(_compileExpr).toList();
+   factory Evaluator.compile(String condition) {
+     final ifsParsed = _compileExpr(condition);
      return Evaluator(ifsParsed);
    }
 
   bool evaluate(Map<String, dynamic> vars) {
-    if(ifs.any((e) => !evalToBool(e, vars))) return false;
-
-    return true;
+    return evalToBool(condition, vars);
   }
 }

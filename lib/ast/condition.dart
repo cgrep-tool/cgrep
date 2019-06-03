@@ -95,7 +95,7 @@ class PrefixOperator implements AstNode {
     return PrefixOperator(token.span, token.type);
   }
 
-  bool get isNot => token == TokenType.not;
+  bool get isNot => token == TokenType.tilde;
 
   @override
   String toString() {
@@ -103,6 +103,6 @@ class PrefixOperator implements AstNode {
   }
 
   static const Set<TokenType> tokens = {
-    TokenType.not,
+    TokenType.tilde,
   };
 }

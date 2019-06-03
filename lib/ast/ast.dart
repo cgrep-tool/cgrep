@@ -21,3 +21,15 @@ class Identifier implements AstNode {
 
   Identifier(this.span, this.name);
 }
+
+class CGrepType implements Value {
+  final FileSpan span;
+
+  final String name;
+
+  CGrepType(this.span, this.name);
+
+  String get value => name;
+
+  String get type => 'Type';
+}

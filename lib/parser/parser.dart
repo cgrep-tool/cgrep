@@ -70,7 +70,7 @@ class ValueParser {
       state.consume();
       return BoolValue(value.span, false);
     }
-    if(value.type == TokenType.not) {
+    if(value.type == TokenType.tilde) {
       state.consume();
       final exp = ValueParser.parse(state);
       return PrefixExpression(value.span.expand(exp.span), PrefixOperator.fromToken(value), exp);
@@ -78,6 +78,10 @@ class ValueParser {
     if (value.type == TokenType.date) {
       state.consume();
       return DateValue(value.span, value.text);
+    }
+    if(value.type == TokenType.type) {
+      state.consume();
+      return CGrepType(value.span, value.text);
     }
     throw SyntaxError(value?.span, "Unknown value");
   }
