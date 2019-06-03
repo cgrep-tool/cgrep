@@ -28,16 +28,65 @@ dynamic _evalBiExpression(
   final left = _evalValue(expression.left, variables);
   final right = _evalValue(expression.right, variables);
 
-  if(expression.op.token == TokenType.cast) {
-    if(right is! CGrepType) {
+  if (expression.op.token == TokenType.cast) {
+    if (right is! CGrepType) {
       throw SyntaxError(right.span, "Type expected!");
     }
-    switch(right.value) {
+    if (left == null) return null;
+    switch (right.value) {
       case '@String':
         return left.toString();
       case '@Int':
-        // TODO
-        throw UnimplementedError();
+        if (left is String) {
+          return int.tryParse(left);
+        } else if (left is num) {
+          return left.toInt();
+        } else if (left is DateTime) {
+          return left.millisecondsSinceEpoch;
+        } else if (left is Duration) {
+          return left.inMilliseconds;
+        } else if (left is bool) {
+          return left ? 1 : 0;
+        }
+        throw SyntaxError(
+            expression.left.span, "Unsupported conversion to Int");
+      case '@Double':
+        if (left is String) {
+          return double.tryParse(left);
+        } else if (left is num) {
+          return left.toDouble();
+        } else if (left is DateTime) {
+          return left.millisecondsSinceEpoch.toDouble();
+        } else if (left is Duration) {
+          return left.inMilliseconds.toDouble();
+        } else if (left is bool) {
+          return left ? 1.0 : 0.0;
+        }
+        throw SyntaxError(
+            expression.left.span, "Unsupported conversion to Double");
+      case '@Date':
+
+      case '@Bool':
+        if (left is String) {
+          switch(left) {
+            case 't':
+            case 'true':
+            case 'yes':
+            case 'y':
+              return true;
+            case 'false':
+            case 'f':
+            case 'n':
+            case 'no':
+              return false;
+            default:
+              throw SyntaxError(expression.left.span, "String not a valid @Bool");
+          }
+        } else if (left is num) {
+          return left != 0;
+        }
+        throw SyntaxError(
+            expression.left.span, "Unsupported conversion to @Bool");
       default:
         throw UnimplementedError();
     }
@@ -146,6 +195,9 @@ dynamic _evalBiExpression(
         throw SyntaxError(expression.op.span, "Invalid operator");
     }
   }
+
+  // TODO DateTime
+  // TODO Duration
 
   if (left.runtimeType == right.runtimeType) {
     switch (expression.op.token) {
