@@ -85,6 +85,25 @@ class DateValue implements SimpleValue<DateTime>, Value, AstNode {
   String get type => "Date";
 }
 
+class DurationValue implements SimpleValue<Duration>, Value, AstNode {
+  final FileSpan span;
+
+  final String rep;
+
+  DurationValue(this.span, this.rep);
+
+  Duration get value {
+    final r = rep.substring(2, rep.length - 1);
+    return parseDuration(r);
+  }
+
+  @override
+  String toString() => value?.toString();
+
+  @override
+  String get type => "Duration";
+}
+
 class Column implements Value {
   final FileSpan span;
 

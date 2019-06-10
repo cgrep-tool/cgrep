@@ -1,5 +1,6 @@
 import 'package:source_span/source_span.dart';
 import '../scanner/scanner.dart';
+import 'package:duration/duration.dart';
 
 part 'condition.dart';
 part 'value.dart';

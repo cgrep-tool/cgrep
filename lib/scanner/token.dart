@@ -52,13 +52,15 @@ enum TokenType {
   false_,
   true_,
   integer,
-  // TODO hexInteger,
-  // TODO binaryInteger,
+  hexInteger,
+  binaryInteger,
   double,
   string,
   rawString,
   column,
+  identifier,
   date,
+  duration,
 }
 
 final normalPatterns = <Pattern, TokenType>{
@@ -103,26 +105,23 @@ final normalPatterns = <Pattern, TokenType>{
   'y': TokenType.true_,
   RegExp(r"@[A-Z][0-9a-zA-Z_]*"): TokenType.type,
   RegExp(r'[0-9]+([_0-9]*[0-9])*'): TokenType.integer,
-  // TODO RegExp(r'0x([A-Fa-f0-9]+)'): TokenType.hexInteger,
-  // TODO RegExp(r'0b([01]+)'): TokenType.binaryInteger,
+  RegExp(r'0x([A-Fa-f0-9]+)'): TokenType.hexInteger,
+  RegExp(r'0b([01]+)'): TokenType.binaryInteger,
   RegExp(r'[0-9]+((\.[0-9]+)|b)?'): TokenType.double,
   RegExp(r"@'[0-9a-zA-Z\-\+: ]*'"): TokenType.date,
-  singleQuotedString: TokenType.string,
-  doubleQuotedString: TokenType.string,
-  rawSingleQuotedString: TokenType.rawString,
-  rawDoubleQuotedString: TokenType.rawString,
-  // TODO RegExp(r'[A-Za-z_][A-Za-z0-9_]*'): TokenType.identifier,
-  RegExp(r'\$[0-9]+'): TokenType.column,
+  RegExes.string: TokenType.string,
+  RegExes.singleQuotedString: TokenType.string,
+  RegExes.rawString: TokenType.rawString,
+  RegExes.rawSingleQuotedString: TokenType.rawString,
+  RegExp(r'[A-Za-z_][A-Za-z0-9_]*'): TokenType.identifier,
+  RegExp(r'#[0-9]+'): TokenType.column,
+  RegExp(r'@\((\d+(d|h|m|s|ms|us),)*(\d+(d|h|m|s|ms|us))+\)'): TokenType.duration,
 };
 
-final RegExp rawDoubleQuotedString = RegExp(
-    r'r"((\\(["\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^"\\]))*"');
-
-final RegExp rawSingleQuotedString = RegExp(
-    r"r'((\\(['\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^'\\]))*'");
-
-final RegExp doubleQuotedString = RegExp(
-    r'"((\\(["\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^"\\]))*"');
-
-final RegExp singleQuotedString = RegExp(
-    r"'((\\(['\\/bfnrt]|(u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))|([^'\\]))*'");
+/// Namespace for required regexes
+abstract class RegExes {
+  static final string = RegExp(r'"((\\")|([^"]))*"');
+  static final singleQuotedString = RegExp(r"'((\\')|([^']))*'");
+  static final rawString = RegExp(r'r"((\\")|([^"]))*"');
+  static final rawSingleQuotedString = RegExp(r"r'((\\')|([^']))*'");
+}

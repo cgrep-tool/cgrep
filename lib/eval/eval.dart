@@ -42,9 +42,9 @@ dynamic _evalBiExpression(
         } else if (left is num) {
           return left.toInt();
         } else if (left is DateTime) {
-          return left.millisecondsSinceEpoch;
+          return left.microsecondsSinceEpoch;
         } else if (left is Duration) {
-          return left.inMilliseconds;
+          return left.inMicroseconds;
         } else if (left is bool) {
           return left ? 1 : 0;
         }
@@ -56,16 +56,30 @@ dynamic _evalBiExpression(
         } else if (left is num) {
           return left.toDouble();
         } else if (left is DateTime) {
-          return left.millisecondsSinceEpoch.toDouble();
+          return left.microsecondsSinceEpoch.toDouble();
         } else if (left is Duration) {
-          return left.inMilliseconds.toDouble();
+          return left.inMicroseconds.toDouble();
         } else if (left is bool) {
           return left ? 1.0 : 0.0;
         }
         throw SyntaxError(
             expression.left.span, "Unsupported conversion to Double");
       case '@Date':
-
+        if(left is String) {
+          return DateTime.tryParse(left); // TODO check for wrong format
+        } else if(left is num) {
+          return DateTime.fromMicrosecondsSinceEpoch(left.toInt(), isUtc: true);
+        }
+        throw SyntaxError(
+            expression.left.span, "Unsupported conversion to Double");
+      case '@Duration':
+        if(left is String) {
+          // TODO
+        } else if(left is num) {
+          return Duration(microseconds: left.toInt());
+        }
+        throw SyntaxError(
+            expression.left.span, "Unsupported conversion to Double");
       case '@Bool':
         if (left is String) {
           switch(left) {
@@ -252,6 +266,12 @@ dynamic _evalBiExpression(
         throw SyntaxError(expression.op.span, "Invalid operator");
     }
   }
+
+  // TODO heterogenous operations
+  // TODO date + duration => date
+  // TODO date - duration => date
+  // TODO string + anything => string
+  // TODO anything + string => string
 
   throw SyntaxError(expression.span, "Operation between incompatible types");
 }

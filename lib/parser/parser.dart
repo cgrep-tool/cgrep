@@ -2,7 +2,7 @@ import '../scanner/scanner.dart';
 import '../ast/ast.dart';
 import 'state.dart';
 import '../errors/errors.dart';
-import 'package:cgrep/utils/string_unescape.dart';
+import 'package:string_unescape/string_unescape.dart';
 
 part 'condition.dart';
 
@@ -52,6 +52,18 @@ class ValueParser {
       state.consume();
       return IntValue(value.span, int.parse(value.text));
     }
+    if (value.type == TokenType.hexInteger) {
+      state.consume();
+      return IntValue(value.span, int.parse(value.text));
+    }
+    if (value.type == TokenType.binaryInteger) {
+      state.consume();
+      return IntValue(value.span, int.parse(value.text.substring(2), radix: 2));
+    }
+    if (value.type == TokenType.integer) {
+      state.consume();
+      return IntValue(value.span, int.parse(value.text));
+    }
     if (value.type == TokenType.double) {
       state.consume();
       return DoubleValue(value.span, double.parse(value.text));
@@ -82,6 +94,10 @@ class ValueParser {
     if (value.type == TokenType.date) {
       state.consume();
       return DateValue(value.span, value.text);
+    }
+    if (value.type == TokenType.duration) {
+      state.consume();
+      return DurationValue(value.span, value.text);
     }
     if(value.type == TokenType.type) {
       state.consume();
